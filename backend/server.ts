@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import 'dotenv/config';
 import type { Request, Response } from 'express';
 import { GameState, LiveGame, LiveGameState, Player, WinnerState } from './types';
 import calcWinState from './helpers/calcWinState';
@@ -11,7 +10,7 @@ const app = express();
 // use CORS as we'll be communicating with the frontend
 app.use(cors());
 
-const port = process.env.PORT || 3001;
+const port = 3001;
 
 // serve react app
 app.use(express.static(path.join(path.resolve(), '../frontend/dist')));
