@@ -93,9 +93,11 @@ app.post('/create', (req: Request, res: Response) => {
     // send new gameId to client
     res.json({ gameId });
 })
-
+const server = app.listen(port, () => {
+    console.log(`Naughts and crosses app listening on port ${port}`)
+})
 // start websocket server
-const io = new Server(3002);
+const io = new Server(server);
 
 io.on('connection', (socket) => {
 
@@ -111,7 +113,7 @@ io.on('connection', (socket) => {
             socket.emit('player assigned', assignedPlayer);
         }
         if(liveGames.find((game) => game.gameId === gameId)?.players.length === 2) {
-            socket.emit('game ready');
+            io.to(gameId).emit('game ready');
         }
         // join game room
         socket.join(gameId);
@@ -121,16 +123,10 @@ io.on('connection', (socket) => {
     socket.on('move', (gameId: string, gameState: GameState, currentPlayerTurn: Player) => {
         const { winState, error } = updateGameState(gameId, gameState, currentPlayerTurn);
         if (error) {
-            socket.emit('error', error);
+            io.to(gameId).emit('error', error);
         } else {
             // send updated game state to all clients in the game room
             io.to(gameId).emit('game state', gameState, winState);
         }
     })
 });
-
-
-
-app.listen(port, () => {
-    console.log(`Naughts and crosses app listening on port ${port}`)
-})
