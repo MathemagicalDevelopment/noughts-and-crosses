@@ -5,12 +5,16 @@ import type { Request, Response } from 'express';
 import { GameState, LiveGame, LiveGameState, Player, WinnerState } from './types';
 import calcWinState from './helpers/calcWinState';
 import { Server } from 'socket.io';
+import path from 'path';
 
 const app = express();
 // use CORS as we'll be communicating with the frontend
 app.use(cors());
 
 const port = process.env.PORT || 3001;
+
+// serve react app
+app.use(express.static(path.join(path.resolve(), '../frontend/dist')));
 
 // store the games in memory
 let liveGames: LiveGame[] = [];
@@ -80,6 +84,7 @@ const assignPlayer = (gameId: string): Player | null => {
     }
 }
 
+
 // create game endpoint
 app.post('/create', (req: Request, res: Response) => {
     // create a new game and return the gameId
@@ -106,6 +111,9 @@ io.on('connection', (socket) => {
             socket.join(gameId);
             socket.emit('player assigned', assignedPlayer);
         }
+        if(liveGames.find((game) => game.gameId === gameId)?.players.length === 2) {
+            socket.emit('game ready');
+        }
         // join game room
         socket.join(gameId);
     })
@@ -121,6 +129,8 @@ io.on('connection', (socket) => {
         }
     })
 });
+
+
 
 app.listen(port, () => {
     console.log(`Naughts and crosses app listening on port ${port}`)
