@@ -4,6 +4,8 @@
   "description": "Naughts and crosses game",
   "main": "index.tsx",
   "scripts": {
+    "start": "parcel src/index.html --port 3000",
+    "build": "parcel build src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Aaron Bosley",
