@@ -1,6 +1,6 @@
 
 const createNewGame = async (): Promise<{ error?: string, gameId?: string }> => {
-    const response = await fetch('http://localhost:3001/game', {
+    const response = await fetch('http://localhost:3001/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

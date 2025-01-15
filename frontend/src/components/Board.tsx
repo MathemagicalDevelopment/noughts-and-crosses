@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { GameState, Player } from '../types';
 import { Cell, GameBoard } from './styles';
 
@@ -16,7 +16,7 @@ const Board = ({
     currentPlayerTurn,
     gameState,
     handleMove
-}: BoardProps) => {
+}: BoardProps): ReactElement =>
     <GameBoard disableClick={!isMyTurn}>
         {/* renders 9 items to the 3 col, 3 row grid */}
         {gameState && gameState.map(({ position, value }) => (
@@ -27,6 +27,6 @@ const Board = ({
             </Cell>
         ))}
     </GameBoard>
-}
+
 
 export default Board
