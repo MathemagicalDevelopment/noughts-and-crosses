@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { Container, Row, SmallTitle } from './styles';
+import { Container, GameTitle, Row, SmallTitle } from './styles';
 import Board from './Board';
 import { LiveGameState, Player } from '../types';
 import { useNavigate, useParams } from 'react-router';
@@ -19,10 +19,11 @@ const Game = () => {
         navigate('/');
     }
 
-    const socket = io('http://localhost:3001');
+    const socket = io();
 
     socket.on('connect', () => {
-        socket.emit('join game', gameId);
+        if (!player)
+            socket.emit('join game', gameId);
     });
 
     socket.on('player assigned', (player: Player) => {
@@ -34,23 +35,30 @@ const Game = () => {
         if (gameId) setLiveGameState({ gameId, gameState: newBoardState, currentPlayerTurn: 'X' });
     });
 
-    socket.on('move', (gameState, winState) => {
-        setLiveGameState(gameState);
+    socket.on('game state', (gameState, winState) => {
+        console.log(gameState, winState);
+        setLiveGameState(prev => ({ ...prev, gameState, currentPlayerTurn: prev?.currentPlayerTurn === 'X' ? 'O' : 'X', gameId: prev?.gameId || '' }));
         if (winState) {
             // game over
             setModalDetails(prev => ({ ...prev, isOpen: true, winner: winState }));
         }
-    })
+    });
+
     const handleUpdateMove = (position: number, player: Player) => {
+        console.log('clicked');
+        const newGameState = liveGameState?.gameState.map(cell => cell.position === position ? { ...cell, value: player } : cell);
         // update game state on server
-        socket.emit('move', liveGameState?.gameId, liveGameState?.gameState, player, position);
-    }
+        socket.emit('move', liveGameState?.gameId, newGameState);
+    };
 
 
     return (
         <Fragment>
             {modalDetails.isOpen && <Modal {...modalDetails} />}
             <Container>
+                {gameReady && liveGameState && <Row>
+                    <GameTitle>{player === liveGameState?.currentPlayerTurn ? 'Your Turn' : `Waiting for ${liveGameState?.currentPlayerTurn} to move`}</GameTitle>
+                </Row>}
                 <Row>
                     {gameReady && liveGameState ? <Board
                         isMyTurn={liveGameState?.currentPlayerTurn === player} currentPlayerTurn={liveGameState?.currentPlayerTurn} gameState={liveGameState.gameState} handleMove={handleUpdateMove} /> : <SmallTitle>Waiting for players...</SmallTitle>}

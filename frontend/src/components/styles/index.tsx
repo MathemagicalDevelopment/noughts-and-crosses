@@ -17,7 +17,7 @@ font-size: 1.5rem;
 `
 
 export const GameBoard = styled.div<{ disableClick?: boolean }>`
-${({ disableClick }) => disableClick ? 'pointer-events: none;' : ''}
+${({ disableClick }) => disableClick ? 'pointer-events: none;' : 'cursor:pointer;'}
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;
@@ -35,6 +35,9 @@ background-color: #f0f0f0;
 color: black;
 font-size: 2rem;
 font-weight: bold;
+display: flex;
+justify-content: center;
+align-items: center;
 `
 
 export const Row = styled.div`

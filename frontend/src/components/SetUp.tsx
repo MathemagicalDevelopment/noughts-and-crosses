@@ -43,8 +43,8 @@ const SetUp = (): ReactElement => {
                     <SmallTitle>Online Play</SmallTitle>
                     <Suspense fallback={LoadingSpinner}>
                         <Button key={'game-create'} onClick={createGame}>Create Game</Button>
-                        {typeof gameId !== 'undefined' ? <input type="text" placeholder='Enter Game ID' value={gameId} onChange={handleChange} /> :
-                            <Button key={'game-find'} onClick={handleClick}>{typeof gameId === 'undefined' ? `Find Game` : `Join`}</Button>}
+                        {typeof gameId !== 'undefined' && <input type="text" placeholder='Enter Game ID' value={gameId} onChange={handleChange} />}
+                        <Button key={'game-find'} onClick={handleClick}>{typeof gameId === 'undefined' ? `Find Game` : `Join`}</Button>
                     </Suspense>
                 </Col>
             </Row>
