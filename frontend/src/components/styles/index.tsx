@@ -16,6 +16,17 @@ export const SmallTitle = styled.h3`
 font-size: 1.5rem;
 `
 
+export const GameBoard = styled.div<{ disableClick?: boolean }>`
+${({ disableClick }) => disableClick ? 'pointer-events: none;' : ''}
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    grid-rows: repeat(3, 1fr);
+    background-color: grey;
+    width: fit-content;
+    padding: 10px;
+`
+
 export const Cell = styled.div`
 width: 100px;
 height: 100px;
