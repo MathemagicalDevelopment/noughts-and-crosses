@@ -5,7 +5,10 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "serve":"node ./dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx watch server.ts"
   },
   "author": "Aaron Bosley",
   "license": "ISC",
